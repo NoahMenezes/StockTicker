@@ -27,67 +27,37 @@ body {
 }
 
 /* --- Main Content Section --- */
+/* --- Main Content Section (ChatGPT-style) --- */
 .main-content-section {
-    min-height: calc(100vh - 70px);
     width: 100%;
+    /* Set height to fill the viewport minus the navbar height */
+    min-height: calc(100vh - 70px);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 2rem;
+    /* Push content to the center, but allow it to start from the top */
+    justify-content: flex-start;
+    padding: 5rem 2rem 2rem; /* Add more padding at the top */
     box-sizing: border-box;
-    position: relative;
-    overflow: hidden;
 }
 
-/* --- Ticker Input Panel --- */
+/* --- Ticker Input Panel (No Box) --- */
 .ticker-input-panel {
     width: 100%;
-    max-width: 700px;
+    max-width: 800px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    text-align: center;
-    padding: 2rem;
-    background: var(--card-bg);
-    border-radius: 20px;
-    border: 1px solid var(--border-color);
-    box-shadow: 0 10px 40px var(--shadow-dark);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    z-index: 1;
+    background: transparent;
+    border: none;
+    box-shadow: none;
 }
 
 /* --- Brand Section --- */
-.brand-section {
-    margin-bottom: 1.5rem;
-}
-
-.brand-title {
-    font-size: 3rem;
-    font-weight: 800;
-    color: var(--text-primary);
-    margin: 0;
-    letter-spacing: 1px;
-    text-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
-}
-
-.brand-subtitle {
-    font-size: 1.1rem;
-    color: var(--accent-cyan);
-    font-weight: 500;
-    opacity: 0.9;
-}
-
-/* --- Input Label --- */
+/* Hide brand and label from main content for a cleaner look */
+.brand-section,
 .input-label {
-    font-size: 1.1rem;
-    font-weight: 300;
-    color: var(--text-secondary);
-    margin: 0 auto 1.5rem;
-    line-height: 1.6;
-    opacity: 0.9;
-    max-width: 600px;
+    display: none;
 }
 
 .input-label .emoji {
@@ -438,20 +408,17 @@ body {
 }
 
 /* --- Footer --- */
+/* --- Footer (Minimalist) --- */
 .main-footer {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
+    width: 100%;
     text-align: center;
-    opacity: 0.6;
-    margin-top: 4rem;
-    font-weight: 300;
-    position: absolute;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    padding: 1rem 0;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    opacity: 0.5;
+    position: fixed; /* Fix to bottom */
+    bottom: 0;
+    left: 0;
 }
 
 .footer-divider {
