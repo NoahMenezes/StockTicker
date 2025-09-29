@@ -211,7 +211,7 @@ const Main = () => {
 
                 <div className="tagline-container">
                     <p className="tagline">
-                        Always correct 15% of the time! <span className="tagline-emoji">📈</span>
+                        Always correct 15% of the time! <span className-="tagline-emoji">📈</span>
                     </p>
                 </div>
 
