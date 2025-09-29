@@ -102,30 +102,40 @@ export async function generateStockReport(tickers) {
         // Get Gemini model
         const model = genAI.getGenerativeModel({ model: MODEL_NAME });
         
-        // Create a clean, professional prompt with 3-day data
-        const prompt = `You are a professional stock analyst. Analyze the following stocks based on their 3-day performance data and provide a clean, readable report (max 200 words). 
+        // Create an enhanced, informative prompt for amazing output
+        const prompt = `You are an elite Wall Street analyst with 15+ years of experience. Create a comprehensive, visually appealing stock analysis report that looks professional and informative. Use emojis and formatting to make it engaging.
 
-IMPORTANT: Write in plain text format without any markdown formatting, asterisks, or special characters. Use simple, clear language.
-
-STOCK PERFORMANCE DATA (Past 3 Days):
+📊 MARKET DATA ANALYSIS (3-Day Performance Window):
 ${stocksData.map(stock => `
-${stock.symbol} Analysis:
-- 3 Days Ago (${stock.dates.threeDaysAgo}): $${stock.prices.threeDaysAgo}
-- 2 Days Ago (${stock.dates.twoDaysAgo}): $${stock.prices.twoDaysAgo} (${stock.dailyChanges.day1 > 0 ? '+' : ''}${stock.dailyChanges.day1}%)
-- Yesterday (${stock.dates.yesterday}): $${stock.prices.yesterday} (${stock.dailyChanges.day2 > 0 ? '+' : ''}${stock.dailyChanges.day2}%)
-- Today (${stock.dates.today}): $${stock.prices.today} (${stock.dailyChanges.day3 > 0 ? '+' : ''}${stock.dailyChanges.day3}%)
-- 3-Day Total Change: ${stock.overall.changePercent > 0 ? '+' : ''}${stock.overall.changePercent}%
-- Volume: ${stock.volume.toLocaleString()} shares
-- Market Cap: $${stock.marketCap}
+🏢 ${stock.symbol} - Complete Analysis:
+📅 3 Days Ago (${stock.dates.threeDaysAgo}): $${stock.prices.threeDaysAgo}
+📅 2 Days Ago (${stock.dates.twoDaysAgo}): $${stock.prices.twoDaysAgo} (${stock.dailyChanges.day1 > 0 ? '📈 +' : '📉 '}${stock.dailyChanges.day1}%)
+📅 Yesterday (${stock.dates.yesterday}): $${stock.prices.yesterday} (${stock.dailyChanges.day2 > 0 ? '📈 +' : '📉 '}${stock.dailyChanges.day2}%)
+📅 Today (${stock.dates.today}): $${stock.prices.today} (${stock.dailyChanges.day3 > 0 ? '📈 +' : '📉 '}${stock.dailyChanges.day3}%)
+💹 3-Day Performance: ${stock.overall.changePercent > 0 ? '🟢 +' : '🔴 '}${stock.overall.changePercent}%
+📊 Trading Volume: ${stock.volume.toLocaleString()} shares
+💰 Market Cap: $${stock.marketCap}
 `).join('\n')}
 
-For each stock, provide in plain text:
-1. Trend Analysis: Is it trending up, down, or sideways?
-2. Key Insights: What does the 3-day pattern tell us?
-3. Action: Clear BUY/HOLD/SELL recommendation with reasoning
-4. Risk Level: Low/Medium/High based on volatility
+Create a detailed, professional report with the following structure:
 
-Write in normal paragraphs without bold text, asterisks, or markdown. Keep it professional, informative, and easy to read.`;
+🎯 EXECUTIVE SUMMARY
+Write a brief market overview highlighting the key performers and overall market sentiment.
+
+📈 INDIVIDUAL STOCK ANALYSIS
+For each stock, provide:
+• 🔍 Trend Analysis: Detailed pattern recognition (bullish/bearish/consolidation)
+• 💡 Key Technical Insights: What the price action reveals about market sentiment
+• 🎯 Investment Recommendation: Clear BUY/HOLD/SELL with specific reasoning
+• ⚠️ Risk Assessment: Volatility analysis and risk factors
+• 🔮 Short-term Outlook: What to expect in the next few trading sessions
+
+📊 PORTFOLIO INSIGHTS
+• Overall portfolio performance summary
+• Risk diversification analysis
+• Market correlation observations
+
+Use professional language but make it engaging with emojis and clear formatting. Aim for 250-300 words for comprehensive analysis.`;
 
         console.log('🤖 Sending request to Gemini AI...');
         console.log('📝 Prompt preview:', prompt.substring(0, 200) + '...');
@@ -166,32 +176,47 @@ Write in normal paragraphs without bold text, asterisks, or markdown. Keep it pr
  */
 function generateFallbackReport(tickers, stocksData) {
     const reports = stocksData.map(stock => {
-        const trend = parseFloat(stock.overall.changePercent) > 0 ? 'UPWARD' : 'DOWNWARD';
+        const trend = parseFloat(stock.overall.changePercent) > 0 ? '📈 BULLISH' : '📉 BEARISH';
+        const trendIcon = parseFloat(stock.overall.changePercent) > 0 ? '🟢' : '🔴';
         const volatility = Math.max(Math.abs(stock.dailyChanges.day1), Math.abs(stock.dailyChanges.day2), Math.abs(stock.dailyChanges.day3));
-        const riskLevel = volatility > 3 ? 'HIGH' : volatility > 1.5 ? 'MEDIUM' : 'LOW';
-        const recommendation = Math.abs(stock.overall.changePercent) > 3 ? 'BUY' : 'HOLD';
+        const riskLevel = volatility > 3 ? '🔴 HIGH' : volatility > 1.5 ? '🟡 MEDIUM' : '🟢 LOW';
+        const recommendation = Math.abs(stock.overall.changePercent) > 3 ? '🎯 BUY' : '🤝 HOLD';
         
-        return `${stock.symbol} (3-Day Analysis):
-Trend: ${trend} trend with ${stock.overall.changePercent}% total change
-Current Price: $${stock.prices.today}
-Recommendation: ${recommendation}
-Risk Level: ${riskLevel}
-Volume: ${stock.volume.toLocaleString()} shares`;
+        return `🏢 ${stock.symbol} - Professional Analysis:
+🔍 Trend Analysis: ${trend} momentum detected
+💹 3-Day Performance: ${trendIcon} ${stock.overall.changePercent}% total change
+💰 Current Price: $${stock.prices.today}
+🎯 Investment Action: ${recommendation}
+⚠️ Risk Assessment: ${riskLevel} volatility
+📊 Trading Volume: ${stock.volume.toLocaleString()} shares
+🔮 Outlook: ${parseFloat(stock.overall.changePercent) > 2 ? 'Strong momentum continues' : parseFloat(stock.overall.changePercent) < -2 ? 'Watch for reversal signals' : 'Consolidation phase expected'}`;
     });
     
     const positiveStocks = stocksData.filter(s => parseFloat(s.overall.changePercent) > 0).length;
+    const avgVolume = Math.round(stocksData.reduce((sum, s) => sum + s.volume, 0) / stocksData.length);
+    const marketSentiment = positiveStocks > stocksData.length / 2 ? '🟢 BULLISH' : positiveStocks < stocksData.length / 2 ? '🔴 BEARISH' : '🟡 NEUTRAL';
     
-    return `EchoTicker 3-Day Stock Analysis
+    return `🎯 EXECUTIVE SUMMARY
+Market sentiment appears ${marketSentiment.toLowerCase()} based on your selected portfolio. ${positiveStocks} out of ${stocksData.length} stocks showing positive momentum over the 3-day analysis window.
+
+📈 INDIVIDUAL STOCK ANALYSIS
 
 ${reports.join('\n\n')}
 
-Portfolio Summary:
-${positiveStocks} out of ${stocksData.length} stocks showing positive 3-day performance
-Average volume: ${Math.round(stocksData.reduce((sum, s) => sum + s.volume, 0) / stocksData.length).toLocaleString()} shares
+📊 PORTFOLIO INSIGHTS
+• Market Sentiment: ${marketSentiment}
+• Portfolio Performance: ${positiveStocks}/${stocksData.length} stocks in positive territory
+• Average Trading Volume: ${avgVolume.toLocaleString()} shares
+• Risk Diversification: ${stocksData.length > 1 ? 'Well diversified across ' + stocksData.length + ' positions' : 'Single position - consider diversification'}
 
-Note: This is demo mode. Connect your Gemini API key for full AI-powered analysis with detailed market insights and recommendations.
+⚠️ DEMO MODE ACTIVE
+Connect your Gemini API key for comprehensive AI-powered analysis including:
+• Advanced technical indicators
+• Market correlation analysis  
+• Sector-specific insights
+• Professional trading recommendations
 
-All data represents the past 3 trading days for comprehensive trend analysis.`;
+💡 Analysis Period: Past 3 trading days for optimal trend identification`;
 }
 
 /**
