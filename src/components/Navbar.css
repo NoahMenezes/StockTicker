@@ -6,10 +6,14 @@
     top: 0;
     left: 0;
     width: 100%;
-    background-color: #1a1a2e; /* Darker, solid background */
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     z-index: 1000;
     height: 70px;
-    border-bottom: none; /* Remove border for a cleaner look */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
 }
 
 /* --- Container for Centering and Spacing --- */
@@ -27,14 +31,37 @@
 .navbar-heading {
     color: var(--text-primary);
     text-decoration: none;
-    font-size: 1.8rem; /* Larger font */
-    font-weight: 700;
+    font-size: 1.8rem;
+    font-weight: 800;
     letter-spacing: 1px;
-    transition: color 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple), var(--accent-green));
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: textShimmer 4s ease-in-out infinite;
+    position: relative;
 }
 
-.navbar-heading:hover {
-    color: var(--accent-cyan);
+.navbar-heading::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-cyan), var(--accent-green));
+    transition: width 0.4s ease;
+}
+
+.navbar-heading:hover::after {
+    width: 100%;
+}
+
+@keyframes textShimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
 }
 
 /* --- Optional: Status Indicator --- */
@@ -44,6 +71,18 @@
     gap: 0.5rem;
     font-size: 0.9rem;
     color: var(--accent-green);
+    padding: 0.5rem 1rem;
+    background: rgba(0, 255, 136, 0.1);
+    border-radius: 20px;
+    border: 1px solid rgba(0, 255, 136, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.status-indicator:hover {
+    background: rgba(0, 255, 136, 0.15);
+    transform: translateY(-1px);
 }
 
 .status-dot {
@@ -51,7 +90,19 @@
     height: 8px;
     background-color: var(--accent-green);
     border-radius: 50%;
-    box-shadow: 0 0 8px var(--accent-green);
+    box-shadow: 0 0 12px var(--accent-green);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { 
+        transform: scale(1); 
+        opacity: 1; 
+    }
+    50% { 
+        transform: scale(1.2); 
+        opacity: 0.8; 
+    }
 }
 
 /* --- Responsive Design --- */
