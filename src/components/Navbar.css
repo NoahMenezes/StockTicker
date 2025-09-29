@@ -1,0 +1,61 @@
+/* src/components/Navbar.css */
+
+/* --- Base Navbar Styling --- */
+.echo-navbar {
+    /* Fixed position at the top */
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    /* Background color and depth */
+    background-color: #1a1a2e; /* Deep blue/purple for a modern, tech feel */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Soft shadow for lift */
+    z-index: 1000; /* Ensure it stays above other content */
+
+    /* Typography */
+    font-family: 'Arial', sans-serif; /* Use a common, clean font */
+    height: 60px; /* Standard navigation bar height */
+}
+
+/* --- Container for Centering and Spacing --- */
+.navbar-container {
+    max-width: 1200px; /* Limit width for large screens */
+    margin: 0 auto; /* Center the container */
+    padding: 0 20px; /* Horizontal padding for smaller screens */
+
+    /* Flexbox for layout */
+    display: flex;
+    align-items: center; /* Vertically center items */
+    height: 100%; /* Ensure container takes full navbar height */
+}
+
+/* --- Heading/Logo Styling (echoTicker) --- */
+.navbar-heading {
+    /* Text color */
+    color: #e94560; /* Bright, contrasting color for the brand name (a vibrant red/pink) */
+    text-decoration: none; /* Remove default underline */
+    
+    /* Typography */
+    font-size: 1.8rem; /* Make the brand name stand out */
+    font-weight: 700; /* Bold */
+    letter-spacing: 1px; /* Slight spacing for an aesthetic look */
+    
+    /* Transition for a subtle hover effect */
+    transition: color 0.3s ease;
+}
+
+.navbar-heading:hover {
+    color: #53a3ff; /* Lighter blue on hover for an interactive feel */
+}
+
+/* --- Optional: Media Query for smaller screens --- */
+@media (max-width: 768px) {
+    .echo-navbar {
+        height: 50px;
+    }
+    
+    .navbar-heading {
+        font-size: 1.5rem;
+    }
+}
