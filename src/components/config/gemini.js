@@ -102,8 +102,10 @@ export async function generateStockReport(tickers) {
         // Get Gemini model
         const model = genAI.getGenerativeModel({ model: MODEL_NAME });
         
-        // Create an enhanced, informative prompt for amazing output
-        const prompt = `You are an elite Wall Street analyst with 15+ years of experience. Create a comprehensive, visually appealing stock analysis report that looks professional and informative. Use emojis and formatting to make it engaging.
+        // Create a clean, user-friendly prompt for readable output
+        const prompt = `You are an elite Wall Street analyst with 15+ years of experience. Create a comprehensive, visually appealing stock analysis report that looks professional and informative. Use emojis and clear formatting to make it engaging.
+
+IMPORTANT: Write in clean, readable format without any markdown symbols, asterisks, or special formatting characters. Use plain text with emojis for visual appeal.
 
 📊 MARKET DATA ANALYSIS (3-Day Performance Window):
 ${stocksData.map(stock => `
@@ -124,18 +126,18 @@ Write a brief market overview highlighting the key performers and overall market
 
 📈 INDIVIDUAL STOCK ANALYSIS
 For each stock, provide:
-• 🔍 Trend Analysis: Detailed pattern recognition (bullish/bearish/consolidation)
-• 💡 Key Technical Insights: What the price action reveals about market sentiment
-• 🎯 Investment Recommendation: Clear BUY/HOLD/SELL with specific reasoning
-• ⚠️ Risk Assessment: Volatility analysis and risk factors
-• 🔮 Short-term Outlook: What to expect in the next few trading sessions
+🔍 Trend Analysis: Detailed pattern recognition (bullish/bearish/consolidation)
+💡 Key Technical Insights: What the price action reveals about market sentiment
+🎯 Investment Recommendation: Clear BUY/HOLD/SELL with specific reasoning
+⚠️ Risk Assessment: Volatility analysis and risk factors
+🔮 Short-term Outlook: What to expect in the next few trading sessions
 
 📊 PORTFOLIO INSIGHTS
-• Overall portfolio performance summary
-• Risk diversification analysis
-• Market correlation observations
+Overall portfolio performance summary
+Risk diversification analysis
+Market correlation observations
 
-Use professional language but make it engaging with emojis and clear formatting. Aim for 250-300 words for comprehensive analysis.`;
+Use professional language with emojis for visual appeal. Write in normal paragraphs and bullet points without any bold text, asterisks, or markdown formatting. Aim for 250-300 words for comprehensive analysis.`;
 
         console.log('🤖 Sending request to Gemini AI...');
         console.log('📝 Prompt preview:', prompt.substring(0, 200) + '...');
