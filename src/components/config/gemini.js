@@ -102,28 +102,30 @@ export async function generateStockReport(tickers) {
         // Get Gemini model
         const model = genAI.getGenerativeModel({ model: MODEL_NAME });
         
-        // Create a focused, professional prompt with 3-day data
-        const prompt = `You are a professional stock analyst. Analyze the following stocks based on their 3-day performance data and provide a concise, actionable report (max 180 words).
+        // Create a clean, professional prompt with 3-day data
+        const prompt = `You are a professional stock analyst. Analyze the following stocks based on their 3-day performance data and provide a clean, readable report (max 200 words). 
 
-📊 STOCK PERFORMANCE DATA (Past 3 Days):
+IMPORTANT: Write in plain text format without any markdown formatting, asterisks, or special characters. Use simple, clear language.
+
+STOCK PERFORMANCE DATA (Past 3 Days):
 ${stocksData.map(stock => `
-📈 ${stock.symbol} Analysis:
-• 3 Days Ago (${stock.dates.threeDaysAgo}): $${stock.prices.threeDaysAgo}
-• 2 Days Ago (${stock.dates.twoDaysAgo}): $${stock.prices.twoDaysAgo} (${stock.dailyChanges.day1 > 0 ? '+' : ''}${stock.dailyChanges.day1}%)
-• Yesterday (${stock.dates.yesterday}): $${stock.prices.yesterday} (${stock.dailyChanges.day2 > 0 ? '+' : ''}${stock.dailyChanges.day2}%)
-• Today (${stock.dates.today}): $${stock.prices.today} (${stock.dailyChanges.day3 > 0 ? '+' : ''}${stock.dailyChanges.day3}%)
-• 3-Day Total Change: ${stock.overall.changePercent > 0 ? '+' : ''}${stock.overall.changePercent}%
-• Volume: ${stock.volume.toLocaleString()} shares
-• Market Cap: $${stock.marketCap}
+${stock.symbol} Analysis:
+- 3 Days Ago (${stock.dates.threeDaysAgo}): $${stock.prices.threeDaysAgo}
+- 2 Days Ago (${stock.dates.twoDaysAgo}): $${stock.prices.twoDaysAgo} (${stock.dailyChanges.day1 > 0 ? '+' : ''}${stock.dailyChanges.day1}%)
+- Yesterday (${stock.dates.yesterday}): $${stock.prices.yesterday} (${stock.dailyChanges.day2 > 0 ? '+' : ''}${stock.dailyChanges.day2}%)
+- Today (${stock.dates.today}): $${stock.prices.today} (${stock.dailyChanges.day3 > 0 ? '+' : ''}${stock.dailyChanges.day3}%)
+- 3-Day Total Change: ${stock.overall.changePercent > 0 ? '+' : ''}${stock.overall.changePercent}%
+- Volume: ${stock.volume.toLocaleString()} shares
+- Market Cap: $${stock.marketCap}
 `).join('\n')}
 
-For each stock, provide:
-1. **Trend Analysis**: Is it trending up, down, or sideways?
-2. **Key Insights**: What does the 3-day pattern tell us?
-3. **Action**: Clear BUY/HOLD/SELL recommendation with reasoning
-4. **Risk Level**: Low/Medium/High based on volatility
+For each stock, provide in plain text:
+1. Trend Analysis: Is it trending up, down, or sideways?
+2. Key Insights: What does the 3-day pattern tell us?
+3. Action: Clear BUY/HOLD/SELL recommendation with reasoning
+4. Risk Level: Low/Medium/High based on volatility
 
-Be concise, data-driven, and actionable. Focus on the most relevant insights from the 3-day trend.`;
+Write in normal paragraphs without bold text, asterisks, or markdown. Keep it professional, informative, and easy to read.`;
 
         console.log('🤖 Sending request to Gemini AI...');
         console.log('📝 Prompt preview:', prompt.substring(0, 200) + '...');
@@ -164,31 +166,32 @@ Be concise, data-driven, and actionable. Focus on the most relevant insights fro
  */
 function generateFallbackReport(tickers, stocksData) {
     const reports = stocksData.map(stock => {
-        const trend = parseFloat(stock.overall.changePercent) > 0 ? '📈 UPWARD' : '📉 DOWNWARD';
+        const trend = parseFloat(stock.overall.changePercent) > 0 ? 'UPWARD' : 'DOWNWARD';
         const volatility = Math.max(Math.abs(stock.dailyChanges.day1), Math.abs(stock.dailyChanges.day2), Math.abs(stock.dailyChanges.day3));
         const riskLevel = volatility > 3 ? 'HIGH' : volatility > 1.5 ? 'MEDIUM' : 'LOW';
         const recommendation = Math.abs(stock.overall.changePercent) > 3 ? 'BUY' : 'HOLD';
         
-        return `📊 ${stock.symbol} (3-Day Analysis):
-• Trend: ${trend} (${stock.overall.changePercent}% total change)
-• Current Price: $${stock.prices.today}
-• Action: ${recommendation} | Risk: ${riskLevel}
-• Volume: ${stock.volume.toLocaleString()} shares`;
+        return `${stock.symbol} (3-Day Analysis):
+Trend: ${trend} trend with ${stock.overall.changePercent}% total change
+Current Price: $${stock.prices.today}
+Recommendation: ${recommendation}
+Risk Level: ${riskLevel}
+Volume: ${stock.volume.toLocaleString()} shares`;
     });
     
     const positiveStocks = stocksData.filter(s => parseFloat(s.overall.changePercent) > 0).length;
     
-    return `📈 EchoTicker 3-Day Stock Analysis
+    return `EchoTicker 3-Day Stock Analysis
 
 ${reports.join('\n\n')}
 
-📊 Portfolio Summary:
-• ${positiveStocks}/${stocksData.length} stocks showing positive 3-day performance
-• Average volume: ${Math.round(stocksData.reduce((sum, s) => sum + s.volume, 0) / stocksData.length).toLocaleString()} shares
+Portfolio Summary:
+${positiveStocks} out of ${stocksData.length} stocks showing positive 3-day performance
+Average volume: ${Math.round(stocksData.reduce((sum, s) => sum + s.volume, 0) / stocksData.length).toLocaleString()} shares
 
-⚠️ Demo Mode: Connect your Gemini API key for full AI-powered analysis with market insights and detailed recommendations.
+Note: This is demo mode. Connect your Gemini API key for full AI-powered analysis with detailed market insights and recommendations.
 
-💡 All data shown represents the past 3 trading days for comprehensive trend analysis.`;
+All data represents the past 3 trading days for comprehensive trend analysis.`;
 }
 
 /**
