@@ -1,18 +1,18 @@
 
 // src/gemini.js (or aiConfig.js)
 
+
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-// ⚠️ IMPORTANT: Replace this with your actual Gemini API Key.
-// Use environment variables (process.env.GEMINI_API_KEY) in a secure setup.
-const GEMINI_API_KEY = "AIzaSyBtLcOleNG3Qn38_7eDaPZIQmG3xA6bt6E"; 
+// Securely access the Gemini API Key from environment variables.
+const GEMINI_API_KEY = process.env.REACT_APP_GEMINI_API_KEY;
 
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 const MODEL_NAME = 'gemini-1.5-flash'; // Correct model name
 /**
  * Converts the raw stock data into a compelling trading report using Gemini.
  * @param {string} data - The raw JSON string containing stock aggregation data.
- * @param {function} renderReport - Callback function to display the final report content.
+ * @param {function} renderReport - Callback function to display the finaWl report content.
  */
 export async function generateStockReport(tickers) {
     try {
