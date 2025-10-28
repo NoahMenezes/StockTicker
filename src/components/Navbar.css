@@ -1,6 +1,6 @@
 /* src/components/Navbar.css */
 
-/* --- Base Navbar Styling --- */
+/* --- Navbar Container --- */
 .echo-navbar {
     position: sticky;
     top: 0;
@@ -9,49 +9,80 @@
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    z-index: 1000;
+    z-index: var(--z-sticky, 200);
     height: 70px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
+    transition: all var(--transition-base, 0.3s ease);
+    will-change: transform;
+}
+
+/* Scrolled state - optional enhancement */
+.echo-navbar.scrolled {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(
+        135deg,
+        rgba(26, 26, 46, 0.95) 0%,
+        rgba(22, 33, 62, 0.95) 100%
+    );
 }
 
 /* --- Container for Centering and Spacing --- */
 .navbar-container {
-    max-width: 1400px; /* Wider container */
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 0 30px;
+    padding: 0 clamp(1rem, 4vw, 2rem);
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Space out items */
+    justify-content: space-between;
     height: 100%;
+    gap: var(--spacing-md, 1rem);
 }
 
 /* --- Heading/Logo Styling --- */
 .navbar-heading {
-    color: var(--text-primary);
+    color: var(--text-primary, #ffffff);
     text-decoration: none;
-    font-size: 1.8rem;
+    font-size: clamp(1.3rem, 4vw, 1.8rem);
     font-weight: 800;
-    letter-spacing: 1px;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple), var(--accent-green));
+    letter-spacing: 0.5px;
+    transition: all 0.4s var(--transition-smooth, cubic-bezier(0.4, 0, 0.2, 1));
+    background: linear-gradient(
+        135deg,
+        var(--accent-cyan, #00d4ff),
+        var(--accent-purple, #8b5cf6),
+        var(--accent-green, #00ff88)
+    );
     background-size: 200% 200%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     animation: textShimmer 4s ease-in-out infinite;
     position: relative;
+    display: inline-block;
+    padding: var(--spacing-xs, 0.25rem) 0;
 }
 
+/* Focus state for accessibility */
+.navbar-heading:focus-visible {
+    outline: 2px solid var(--accent-cyan, #00d4ff);
+    outline-offset: 4px;
+    border-radius: var(--radius-sm, 8px);
+}
+
+/* Animated underline effect */
 .navbar-heading::after {
-    content: '';
+    content: "";
     position: absolute;
-    bottom: -2px;
+    bottom: 0;
     left: 0;
     width: 0;
     height: 2px;
-    background: linear-gradient(90deg, var(--accent-cyan), var(--accent-green));
+    background: linear-gradient(
+        90deg,
+        var(--accent-cyan, #00d4ff),
+        var(--accent-green, #00ff88)
+    );
     transition: width 0.4s ease;
 }
 
@@ -60,48 +91,58 @@
 }
 
 @keyframes textShimmer {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+    0%,
+    100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
 }
 
-/* --- Optional: Status Indicator --- */
+/* --- Status Indicator --- */
 .status-indicator {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--spacing-sm, 0.5rem);
     font-size: 0.9rem;
-    color: var(--accent-green);
-    padding: 0.5rem 1rem;
+    color: var(--accent-green, #00ff88);
+    padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 1rem);
     background: rgba(0, 255, 136, 0.1);
-    border-radius: 20px;
+    border-radius: var(--radius-lg, 20px);
     border: 1px solid rgba(0, 255, 136, 0.2);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
+    transition: all var(--transition-base, 0.3s ease);
+    white-space: nowrap;
+    font-weight: 500;
 }
 
 .status-indicator:hover {
     background: rgba(0, 255, 136, 0.15);
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 255, 136, 0.2);
 }
 
 .status-dot {
     width: 8px;
     height: 8px;
-    background-color: var(--accent-green);
+    background-color: var(--accent-green, #00ff88);
     border-radius: 50%;
-    box-shadow: 0 0 12px var(--accent-green);
+    box-shadow: 0 0 12px var(--accent-green, #00ff88);
     animation: pulse 2s ease-in-out infinite;
+    flex-shrink: 0;
 }
 
 @keyframes pulse {
-    0%, 100% { 
-        transform: scale(1); 
-        opacity: 1; 
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
     }
-    50% { 
-        transform: scale(1.2); 
-        opacity: 0.8; 
+    50% {
+        transform: scale(1.2);
+        opacity: 0.8;
     }
 }
 
@@ -110,13 +151,90 @@
     .echo-navbar {
         height: 60px;
     }
-    .navbar-container {
-        padding: 0 20px;
-    }
+
     .navbar-heading {
-        font-size: 1.5rem;
+        letter-spacing: 0.3px;
     }
+
     .status-indicator {
-        display: none; /* Hide indicator on small screens */
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+        gap: 0.4rem;
+    }
+
+    .status-dot {
+        width: 6px;
+        height: 6px;
+    }
+}
+
+@media (max-width: 640px) {
+    .status-indicator {
+        display: none;
+    }
+}
+
+/* --- Small Screens --- */
+@media (max-width: 480px) {
+    .echo-navbar {
+        height: 56px;
+    }
+
+    .navbar-container {
+        padding: 0 1rem;
+    }
+}
+
+/* --- Accessibility: Reduced Motion --- */
+@media (prefers-reduced-motion: reduce) {
+    .navbar-heading {
+        animation: none;
+    }
+
+    .navbar-heading::after {
+        transition: none;
+    }
+
+    .status-dot {
+        animation: none;
+    }
+
+    .status-indicator:hover {
+        transform: none;
+    }
+}
+
+/* --- Print Styles --- */
+@media print {
+    .echo-navbar {
+        position: static;
+        box-shadow: none;
+        border-bottom: 1px solid #000;
+        background: white;
+    }
+
+    .navbar-heading {
+        background: none;
+        -webkit-text-fill-color: initial;
+        color: black;
+    }
+
+    .status-indicator {
+        display: none;
+    }
+}
+
+/* --- High Contrast Mode --- */
+@media (prefers-contrast: high) {
+    .echo-navbar {
+        border-bottom: 2px solid white;
+    }
+
+    .navbar-heading {
+        -webkit-text-fill-color: white;
+    }
+
+    .status-indicator {
+        border-width: 2px;
     }
 }
